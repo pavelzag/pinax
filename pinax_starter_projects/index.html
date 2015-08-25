@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>List of Starter Projects - Pinax Documentation</title>
+  <title>Pinax Starter Projects - Pinax Documentation</title>
   
 
   <link rel="shortcut icon" href="../img/favicon.ico">
@@ -20,7 +20,7 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "List of Starter Projects";
+    var mkdocs_page_name = "Pinax Starter Projects";
   </script>
   
   <script src="../js/jquery-2.1.1.min.js"></script>
@@ -98,36 +98,28 @@
 
         
             
-    <li class="toctree-l1 ">
-        <a class="" href="../pinax_starter_projects/">Pinax Starter Projects</a>
+    <li class="toctree-l1 current">
+        <a class="current" href="./">Pinax Starter Projects</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#new-approach">New Approach</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#getting-started">Getting Started</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#development">Development</a></li>
+                
+            
+            </ul>
         
     </li>
 
         
             
-    <li class="toctree-l1 current">
-        <a class="current" href="./">List of Starter Projects</a>
-        
-            <ul>
-            
-                <li class="toctree-l3"><a href="#list-of-starter-projects">List of Starter Projects</a></li>
-                
-                    <li><a class="toctree-l4" href="#pinax-project-zero">Pinax-Project-Zero</a></li>
-                
-                    <li><a class="toctree-l4" href="#pinax-project-account">Pinax-Project-Account</a></li>
-                
-                    <li><a class="toctree-l4" href="#pinax-project-blog">Pinax-Project-Blog</a></li>
-                
-                    <li><a class="toctree-l4" href="#pinax-project-static">Pinax-Project-Static</a></li>
-                
-                    <li><a class="toctree-l4" href="#pinax-project-documents">Pinax-Project-Documents</a></li>
-                
-                    <li><a class="toctree-l4" href="#pinax-project-wiki">Pinax-Project-Wiki</a></li>
-                
-                    <li><a class="toctree-l4" href="#pinax-project-team-wiki">Pinax-Project-Team-Wiki</a></li>
-                
-            
-            </ul>
+    <li class="toctree-l1 ">
+        <a class="" href="../starter_project_list/">List of Starter Projects</a>
         
     </li>
 
@@ -234,7 +226,7 @@
         
       
     
-    <li>List of Starter Projects</li>
+    <li>Pinax Starter Projects</li>
     <li class="wy-breadcrumbs-aside">
       
     </li>
@@ -244,60 +236,47 @@
           <div role="main">
             <div class="section">
               
-                <p>Each of these will eventually link to a separate page for each starter project with:</p>
-<ul>
-<li>Description</li>
-<li>What starter project it’s built on</li>
-<li>What apps it uses (and perhaps particularly showcases)</li>
-</ul>
-<h1 id="list-of-starter-projects">List of Starter Projects</h1>
-<h2 id="pinax-project-zero">Pinax-Project-Zero</h2>
-<p>This project lays the foundation for all other Pinax starter projects. It provides the project directory layout and Bootstrap-based theme.</p>
-<pre><code>django-admin.py startproject --template=https://github.com/pinax/pinax-starter-projects/zipball/zero mysite -n webpack.config.js
+                <h1 id="new-approach">New Approach</h1>
+<p>One of the things that has become a bit of a maintenance nightmare, especially as we add additional projects is keeping all the repos up to date with when most of the changes apply to all of them (e.g. upgrade Django version).</p>
+<p>The pinax/pinax-starter projects repo, which is available <a href="https://github.com/pinax/pinax-starter-projects/blob/master/README.md">here</a>, serves as an experiment as a new way of managing this.</p>
+<p>We will leverage <code>git</code> and branching to manage the hierarchy. The <code>master</code> branch will remain purely for the README and perhaps other ancillary files. Each project template will get a new branch and will branch from its natural parent. The README will be maintained with a full list of the branches and thus the starter projects in the repo. We may at some point add remotes to push each branch to its own repo where the code will live at master, but that will be treated purely as mirrors of this repo.</p>
+<h1 id="getting-started">Getting Started</h1>
+<p>All starter projects share a common method for getting started. It involves creating a <code>virtualenv</code>, installing Django, and running the `startproject command with a url to the template, followed by a few commands within your new project.</p>
+<pre><code>pip install virtualenv
+virtualenv mysiteenv
+source mysiteenv/bin/activate
+pip install Django==1.8.4
+django-admin.py startproject --template=https://github.com/pinax/pinax-starter-projects/zipball/&lt;PROJECT_BRANCH&gt; mysite -n webpack.config.js
+cd mysite
+chmod +x manage.py
+pip install -r requirements.txt
+./manage.py migrate
+./manage.py loaddata sites
+./manage.py runserver
 </code></pre>
 
-<h2 id="pinax-project-account">Pinax-Project-Account</h2>
-<p>In addition to what is provided by the "zero" project, this project provides thorough integration with django-user-accounts, adding comprehensive account management functionality. It is a foundation suitable for most sites that have user accounts.</p>
-<pre><code>django-admin.py startproject --template=https://github.com/pinax/pinax-starter-projects/zipball/account mysite -n webpack.config.js
+<h1 id="development">Development</h1>
+<p>If you want to develop your own starter projects here is the workflow you should follow:</p>
+<ol>
+<li>Start with the branch you want to base your new project on.</li>
+<li><code>git co -b &lt;name&gt;</code></li>
+<li>Do the work on your project template.</li>
+<li>Test your project template by running <code>django-admin.py startproject --template=pinax-starter-projects test1 -n webpack.config.js</code></li>
+<li>Once you are satisified with your testing, commit.</li>
+<li><code>git co master</code> and then update the <code>README.md</code> file with details about your new project.</li>
+<li>Update all descendent branches:</li>
+</ol>
+<pre><code>(
+ git co zero &amp;&amp; git merge master --no-edit
+ git co account &amp;&amp; git merge zero --no-edit
+ git co blog &amp;&amp; git merge zero --no-edit
+ git co static &amp;&amp; git merge zero --no-edit
+ git co documents &amp;&amp; git merge account --no-edit
+ git co wiki &amp;&amp; git merge account --no-edit
+ git co team-wiki &amp;&amp; git merge wiki --no-edit
+)
+git push
 </code></pre>
-
-<h2 id="pinax-project-blog">Pinax-Project-Blog</h2>
-<p>This project gets you off and running with a blog.</p>
-<pre><code>django-admin.py startproject --template=https://github.com/pinax/pinax-starter-projects/zipball/blog mysite -n webpack.config.js
-</code></pre>
-
-<h2 id="pinax-project-static">Pinax-Project-Static</h2>
-<p>This purpose of this starter project is to provide a robust mocking and design tool.</p>
-<pre><code>django-admin.py startproject --template=https://github.com/pinax/pinax-starter-projects/zipball/static mysite -n webpack.config.js
-</code></pre>
-
-<h2 id="pinax-project-documents">Pinax-Project-Documents</h2>
-<p>Builds on the Accounts starter project to get you off and running with a document library built around <a href="https://github.com/pinax/pinax-documents">pinax-documents</a>.</p>
-<pre><code>django-admin.py startproject --template=https://github.com/pinax/pinax-starter-projects/zipball/documents mysite -n webpack.config.js
-</code></pre>
-
-<h2 id="pinax-project-wiki">Pinax-Project-Wiki</h2>
-<p>This project is a demo starter project that provides a wiki for authenticated users.</p>
-<pre><code>django-admin.py startproject --template=https://github.com/pinax/pinax-starter-projects/zipball/wiki mysite -n webpack.config.js
-</code></pre>
-
-<h2 id="pinax-project-team-wiki">Pinax-Project-Team-Wiki</h2>
-<p>This project is a starter project that has account management with profiles and teams and basic collaborative content.</p>
-<pre><code>django-admin.py startproject --template=https://github.com/pinax/pinax-starter-projects/zipball/team-wiki mysite -n webpack.config.js
-</code></pre>
-
-<p>Additional atarter projects:</p>
-<ul>
-<li>pinax-project-social</li>
-<li>pinax-project-socialauth</li>
-<li>pinax-project-waitinglist</li>
-<li>pinax-project-privatebeta</li>
-<li>pinax-project-symposion</li>
-<li>pinax-project-lms</li>
-<li>pinax-project-forums</li>
-<li>pinax-project-teams</li>
-</ul>
-<p>Some starter projects just demo an app or collection of apps. Some provide scaffolding during the development and testing of an app. Some are full-featured, out-of-the-box sites. Some lay the foundation for almost any custom Django site.</p>
               
             </div>
           </div>
@@ -305,10 +284,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../moving_to_webpack/" class="btn btn-neutral float-right" title="Moving to webpack"/>Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../starter_project_list/" class="btn btn-neutral float-right" title="List of Starter Projects"/>Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../pinax_starter_projects/" class="btn btn-neutral" title="Pinax Starter Projects"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../faq/" class="btn btn-neutral" title="FAQs"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -334,10 +313,10 @@
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
-        <span><a href="../pinax_starter_projects/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../faq/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../moving_to_webpack/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../starter_project_list/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
